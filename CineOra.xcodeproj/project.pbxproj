@@ -1,0 +1,274 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		082DE01208C65CBA9F948469 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D20472941E51EDA8E43D3D /* HomeView.swift */; };
+		279E9298FB2E52BBA59FBD05 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264C62DABBCF50D0A6B18BB9 /* FavoritesView.swift */; };
+		5532F63ACA0D56BC89E17616 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC73650E283C52A5B48BA9FA /* RootView.swift */; };
+		5CF7C779E2B559CBAD20A7AD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622E21A86FCD59E2AAD24547 /* Theme.swift */; };
+		66DB9A0801B65126B51F4490 /* TMDBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC7FDEB6D6F5B38B3E8ABAE /* TMDBService.swift */; };
+		70F92392865F5E36A4DF8E9B /* MovieDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD88F755A5955141950CA73E /* MovieDetailView.swift */; };
+		94DFD4E4370753198C0797ED /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1E9C87B93F510C99DC4C30 /* CategoriesView.swift */; };
+		B08FFD56A35E5E89B8553696 /* SearchMoviesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4B8F3A0D7C56A28FCF65B8 /* SearchMoviesView.swift */; };
+		BC945197B0145CEFBAEEC2A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E9FBF44BBC953D9A8096CCC /* Assets.xcassets */; };
+		BCDFCC9020D757168D198B2A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8886D42B654D5F6B90AE077D /* SettingsView.swift */; };
+		E00787BF978C58AE984FADEF /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08D900FF08750D6BC130762 /* Components.swift */; };
+		E8C0D478AF00500B9F08BF89 /* CineOraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A584F35490259358026AAA1 /* CineOraApp.swift */; };
+		F7D533BFDA295F04AB0F06AD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B7B0E23152527D886C4C2B /* Models.swift */; };
+		FD96318347895C889A078FB5 /* FavoritesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C576ACD397581DADB862E1 /* FavoritesStore.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0A584F35490259358026AAA1 /* CineOraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CineOraApp.swift; sourceTree = "<group>"; };
+		16B7B0E23152527D886C4C2B /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		1C2E99A800AA53BAB2E9099C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		264C62DABBCF50D0A6B18BB9 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
+		48D20472941E51EDA8E43D3D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		622E21A86FCD59E2AAD24547 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		7E9FBF44BBC953D9A8096CCC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8886D42B654D5F6B90AE077D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		9A1E9C87B93F510C99DC4C30 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
+		AD88F755A5955141950CA73E /* MovieDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailView.swift; sourceTree = "<group>"; };
+		AEC7FDEB6D6F5B38B3E8ABAE /* TMDBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBService.swift; sourceTree = "<group>"; };
+		B08D900FF08750D6BC130762 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		BC73650E283C52A5B48BA9FA /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		BDE073B604975A84A51957BD /* CineOra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CineOra.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4C576ACD397581DADB862E1 /* FavoritesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStore.swift; sourceTree = "<group>"; };
+		FC4B8F3A0D7C56A28FCF65B8 /* SearchMoviesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMoviesView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		21471C510E625CA4A68F076F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		545A54CEFA8851D0AD1F93D6 /* CineOra */ = {
+			isa = PBXGroup;
+			children = (
+				0A584F35490259358026AAA1 /* CineOraApp.swift */,
+				622E21A86FCD59E2AAD24547 /* Theme.swift */,
+				16B7B0E23152527D886C4C2B /* Models.swift */,
+				AEC7FDEB6D6F5B38B3E8ABAE /* TMDBService.swift */,
+				F4C576ACD397581DADB862E1 /* FavoritesStore.swift */,
+				BC73650E283C52A5B48BA9FA /* RootView.swift */,
+				B08D900FF08750D6BC130762 /* Components.swift */,
+				48D20472941E51EDA8E43D3D /* HomeView.swift */,
+				9A1E9C87B93F510C99DC4C30 /* CategoriesView.swift */,
+				FC4B8F3A0D7C56A28FCF65B8 /* SearchMoviesView.swift */,
+				264C62DABBCF50D0A6B18BB9 /* FavoritesView.swift */,
+				AD88F755A5955141950CA73E /* MovieDetailView.swift */,
+				8886D42B654D5F6B90AE077D /* SettingsView.swift */,
+				7E9FBF44BBC953D9A8096CCC /* Assets.xcassets */,
+				1C2E99A800AA53BAB2E9099C /* Info.plist */,
+			);
+			path = CineOra;
+			sourceTree = "<group>";
+		};
+		8B83ADE5CCF6577690ED3459 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BDE073B604975A84A51957BD /* CineOra.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BA5E3C83E87F573EA61FB62B = {
+			isa = PBXGroup;
+			children = (
+				545A54CEFA8851D0AD1F93D6 /* CineOra */,
+				8B83ADE5CCF6577690ED3459 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5BB1976CDF3B5F4087BB4681 /* CineOra */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6573F172D41A5B18A1FD2841 /* Build configuration list for PBXNativeTarget "CineOra" */;
+			buildPhases = (
+				61B80541DE9550DFAF4E8746 /* Sources */,
+				21471C510E625CA4A68F076F /* Frameworks */,
+				F993D5E25B625BE5A2078084 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CineOra;
+			productName = CineOra;
+			productReference = BDE073B604975A84A51957BD /* CineOra.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		20A6F97B442F5DBFBE0F887B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					5BB1976CDF3B5F4087BB4681 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 27CD9AF81A1E59F2B825AFD0 /* Build configuration list for PBXProject "CineOra" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				it,
+			);
+			mainGroup = BA5E3C83E87F573EA61FB62B;
+			productRefGroup = 8B83ADE5CCF6577690ED3459 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5BB1976CDF3B5F4087BB4681 /* CineOra */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F993D5E25B625BE5A2078084 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC945197B0145CEFBAEEC2A4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		61B80541DE9550DFAF4E8746 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8C0D478AF00500B9F08BF89 /* CineOraApp.swift in Sources */,
+				5CF7C779E2B559CBAD20A7AD /* Theme.swift in Sources */,
+				F7D533BFDA295F04AB0F06AD /* Models.swift in Sources */,
+				66DB9A0801B65126B51F4490 /* TMDBService.swift in Sources */,
+				FD96318347895C889A078FB5 /* FavoritesStore.swift in Sources */,
+				5532F63ACA0D56BC89E17616 /* RootView.swift in Sources */,
+				E00787BF978C58AE984FADEF /* Components.swift in Sources */,
+				082DE01208C65CBA9F948469 /* HomeView.swift in Sources */,
+				94DFD4E4370753198C0797ED /* CategoriesView.swift in Sources */,
+				B08FFD56A35E5E89B8553696 /* SearchMoviesView.swift in Sources */,
+				279E9298FB2E52BBA59FBD05 /* FavoritesView.swift in Sources */,
+				70F92392865F5E36A4DF8E9B /* MovieDetailView.swift in Sources */,
+				BCDFCC9020D757168D198B2A /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		9AA3E36171325F29B000DE9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B8SC92LPR5;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CineOra/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dmb.cineora;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		BE07D922CCF756F389AAD211 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B8SC92LPR5;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CineOra/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dmb.cineora;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		DDC27B9F2E5C54D2BB2E4261 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FF9D1196C5A75BADB5F8D1EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		27CD9AF81A1E59F2B825AFD0 /* Build configuration list for PBXProject "CineOra" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF9D1196C5A75BADB5F8D1EC /* Debug */,
+				DDC27B9F2E5C54D2BB2E4261 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6573F172D41A5B18A1FD2841 /* Build configuration list for PBXNativeTarget "CineOra" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9AA3E36171325F29B000DE9D /* Debug */,
+				BE07D922CCF756F389AAD211 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 20A6F97B442F5DBFBE0F887B /* Project object */;
+}
