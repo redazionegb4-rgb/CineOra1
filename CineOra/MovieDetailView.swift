@@ -65,42 +65,46 @@ struct MovieDetailView: View {
     private func header(width: CGFloat) -> some View {
         ZStack(alignment: .bottom) {
             RemoteImage(url: model.details?.backdropURL ?? movie.backdropURL)
-                .frame(width: width, height: 330)
+                .frame(width: width, height: 410)
                 .clipped()
 
             LinearGradient(
-                colors: [.black.opacity(0.05), CineTheme.background.opacity(0.55), CineTheme.background],
+                colors: [.black.opacity(0.10), CineTheme.background.opacity(0.42), CineTheme.background],
                 startPoint: .top,
                 endPoint: .bottom
             )
 
-            VStack(spacing: 13) {
+            HStack(alignment: .bottom, spacing: 18) {
                 RemoteImage(url: model.details?.posterURL ?? movie.posterURL)
-                    .frame(width: 132, height: 198)
+                    .frame(width: 116, height: 174)
                     .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.16)))
-                    .shadow(color: .black.opacity(0.65), radius: 18, y: 10)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.white.opacity(0.16)))
+                    .shadow(color: .black.opacity(0.65), radius: 16, y: 8)
 
-                Text(model.details?.title ?? movie.title)
-                    .font(.system(size: 30, weight: .heavy, design: .rounded))
-                    .multilineTextAlignment(.center)
-                    .lineLimit(3)
-                    .minimumScaleFactor(0.72)
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: width - 44)
-
-                HStack(spacing: 16) {
-                    Label(String(format: "%.1f", model.details?.voteAverage ?? movie.voteAverage), systemImage: "star.fill")
-                        .foregroundStyle(CineTheme.accent)
-                    Text(model.details?.releaseBadge ?? movie.releaseBadge)
-                        .font(.subheadline.weight(.bold))
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(model.details?.title ?? movie.title)
+                        .font(.system(size: 28, weight: .heavy, design: .rounded))
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(3)
+                        .minimumScaleFactor(0.72)
                         .foregroundStyle(.white)
+
+                    HStack(spacing: 12) {
+                        Label(String(format: "%.1f", model.details?.voteAverage ?? movie.voteAverage), systemImage: "star.fill")
+                            .foregroundStyle(CineTheme.accent)
+                        Text(model.details?.releaseBadge ?? movie.releaseBadge)
+                            .font(.subheadline.weight(.bold))
+                            .foregroundStyle(.white)
+                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, 8)
             }
-            .padding(.bottom, 24)
+            .padding(.horizontal, 22)
+            .padding(.bottom, 20)
         }
-        .frame(width: width, height: 500)
+        .frame(width: width, height: 410)
         .clipped()
     }
 
