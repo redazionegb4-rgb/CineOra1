@@ -23,18 +23,19 @@ struct MovieDetailView: View {
     @StateObject private var model = MovieDetailViewModel()
     @EnvironmentObject private var favorites: FavoritesStore
     @Environment(\.openURL) private var openURL
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         GeometryReader { proxy in
-            ZStack {
+            ZStack(alignment: .topLeading) {
                 CineTheme.background.ignoresSafeArea()
 
                 ScrollView(showsIndicators: false) {
                     LazyVStack(spacing: 0) {
-                        header(width: proxy.size.width)
+                        hero(width: proxy.size.width, topInset: proxy.safeAreaInsets.top)
 
-                        VStack(alignment: .leading, spacing: 22) {
-                            releaseSection
+                        VStack(alignment: .leading, spacing: 24) {
+                            releaseCard
 
                             if model.loading {
                                 LoadingStateView(message: "Carico la scheda…")
@@ -47,77 +48,108 @@ struct MovieDetailView: View {
                                     .frame(maxWidth: .infinity, alignment: .center)
                             }
                         }
-                        .frame(width: max(proxy.size.width - 36, 0), alignment: .leading)
+                        .padding(.horizontal, 20)
                         .padding(.top, 22)
-                        .padding(.bottom, 50)
+                        .padding(.bottom, 48)
                     }
                     .frame(width: proxy.size.width)
                 }
+                .ignoresSafeArea(edges: .top)
+
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 25, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 52, height: 52)
+                        .background(.ultraThinMaterial, in: Circle())
+                        .overlay(Circle().stroke(Color.white.opacity(0.14)))
+                        .shadow(color: .black.opacity(0.35), radius: 12, y: 5)
+                }
+                .buttonStyle(.plain)
+                .padding(.leading, 20)
+                .padding(.top, proxy.safeAreaInsets.top + 8)
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(CineTheme.background.opacity(0.98), for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbar(.hidden, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
         .task { await model.load(id: movie.id) }
     }
 
-    private func header(width: CGFloat) -> some View {
-        ZStack(alignment: .bottom) {
+    private func hero(width: CGFloat, topInset: CGFloat) -> some View {
+        let heroHeight: CGFloat = 560 + topInset
+
+        return ZStack(alignment: .bottom) {
             RemoteImage(url: model.details?.backdropURL ?? movie.backdropURL)
-                .frame(width: width, height: 410)
+                .frame(width: width, height: heroHeight)
                 .clipped()
+                .overlay(Color.black.opacity(0.13))
 
             LinearGradient(
-                colors: [.black.opacity(0.10), CineTheme.background.opacity(0.42), CineTheme.background],
+                stops: [
+                    .init(color: .black.opacity(0.05), location: 0.0),
+                    .init(color: .black.opacity(0.12), location: 0.42),
+                    .init(color: CineTheme.background.opacity(0.86), location: 0.78),
+                    .init(color: CineTheme.background, location: 1.0)
+                ],
                 startPoint: .top,
                 endPoint: .bottom
             )
 
             HStack(alignment: .bottom, spacing: 18) {
                 RemoteImage(url: model.details?.posterURL ?? movie.posterURL)
-                    .frame(width: 116, height: 174)
+                    .frame(width: 126, height: 190)
                     .clipped()
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.white.opacity(0.16)))
-                    .shadow(color: .black.opacity(0.65), radius: 16, y: 8)
+                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.20)))
+                    .shadow(color: .black.opacity(0.65), radius: 18, y: 10)
 
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text(model.details?.title ?? movie.title)
-                        .font(.system(size: 28, weight: .heavy, design: .rounded))
-                        .multilineTextAlignment(.leading)
-                        .lineLimit(3)
-                        .minimumScaleFactor(0.72)
+                        .font(.system(size: 31, weight: .heavy, design: .rounded))
                         .foregroundStyle(.white)
+                        .lineLimit(3)
+                        .minimumScaleFactor(0.70)
+                        .fixedSize(horizontal: false, vertical: true)
 
-                    HStack(spacing: 12) {
-                        Label(String(format: "%.1f", model.details?.voteAverage ?? movie.voteAverage), systemImage: "star.fill")
+                    HStack(spacing: 9) {
+                        Image(systemName: "star.fill")
                             .foregroundStyle(CineTheme.accent)
-                        Text(model.details?.releaseBadge ?? movie.releaseBadge)
-                            .font(.subheadline.weight(.bold))
-                            .foregroundStyle(.white)
+                        Text(String(format: "%.1f", model.details?.voteAverage ?? movie.voteAverage))
+                            .font(.headline.weight(.bold))
+                        Text("•")
+                            .foregroundStyle(.white.opacity(0.45))
+                        Text(model.details?.releaseBadge.uppercased() ?? movie.releaseBadge.uppercased())
+                            .font(.subheadline.weight(.heavy))
+                            .foregroundStyle(CineTheme.accent)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.75)
                     }
+                    .foregroundStyle(.white)
+
+                    Label(model.details?.formattedReleaseDate ?? movie.formattedReleaseDate, systemImage: "calendar")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white.opacity(0.82))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, 8)
+                .padding(.bottom, 4)
             }
             .padding(.horizontal, 22)
-            .padding(.bottom, 20)
+            .padding(.bottom, 24)
         }
-        .frame(width: width, height: 410)
+        .frame(width: width, height: heroHeight)
         .clipped()
     }
 
-    private var releaseSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
+    private var releaseCard: some View {
+        VStack(spacing: 16) {
             HStack(spacing: 14) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 14).fill(CineTheme.accent.opacity(0.14))
+                    RoundedRectangle(cornerRadius: 15).fill(CineTheme.accent.opacity(0.15))
                     Image(systemName: "calendar.badge.clock")
                         .font(.title2)
                         .foregroundStyle(CineTheme.accent)
                 }
-                .frame(width: 54, height: 54)
+                .frame(width: 58, height: 58)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(model.details?.releaseBadge ?? movie.releaseBadge)
@@ -136,10 +168,10 @@ struct MovieDetailView: View {
                 )
                 .font(.headline.weight(.bold))
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 15)
+                .padding(.vertical, 16)
                 .foregroundStyle(.black)
                 .background(CineTheme.accent)
-                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
         }
         .padding(18)
@@ -148,18 +180,11 @@ struct MovieDetailView: View {
 
     @ViewBuilder
     private func detailsContent(_ details: MovieDetails) -> some View {
-        if !details.genres.isEmpty {
-            VStack(alignment: .leading, spacing: 12) {
-                sectionLabel("GENERI")
-                FlexibleGenres(genres: details.genres)
-            }
-        }
-
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 13) {
             sectionLabel("TRAMA")
             Text(details.overview.isEmpty ? "Trama non disponibile in italiano." : details.overview)
                 .font(.body)
-                .foregroundStyle(.white.opacity(0.9))
+                .foregroundStyle(.white.opacity(0.92))
                 .lineSpacing(5)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -177,8 +202,15 @@ struct MovieDetailView: View {
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
-                    .background(CineTheme.gradient)
-                    .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+                    .background(CineTheme.accent)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            }
+        }
+
+        if !details.genres.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                sectionLabel("GENERI")
+                FlexibleGenres(genres: details.genres)
             }
         }
 
@@ -190,7 +222,7 @@ struct MovieDetailView: View {
                         ForEach(Array(cast)) { person in
                             VStack(spacing: 8) {
                                 RemoteImage(url: person.imageURL)
-                                    .frame(width: 84, height: 108)
+                                    .frame(width: 88, height: 114)
                                     .clipped()
                                     .clipShape(RoundedRectangle(cornerRadius: 14))
                                 Text(person.name)
@@ -203,7 +235,7 @@ struct MovieDetailView: View {
                                     .lineLimit(2)
                                     .multilineTextAlignment(.center)
                             }
-                            .frame(width: 92)
+                            .frame(width: 96)
                         }
                     }
                 }
@@ -225,7 +257,7 @@ struct MovieDetailView: View {
             Text(value).font(.headline.weight(.bold)).lineLimit(1).minimumScaleFactor(0.8)
         }
         .padding(16)
-        .frame(maxWidth: .infinity, minHeight: 118, alignment: .leading)
+        .frame(maxWidth: .infinity, minHeight: 112, alignment: .leading)
         .cineCard(cornerRadius: 18)
     }
 }
