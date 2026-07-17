@@ -60,7 +60,7 @@ struct MovieDetailView: View {
                     Label(String(format: "%.1f", model.details?.voteAverage ?? movie.voteAverage), systemImage: "star.fill")
                         .foregroundStyle(CineTheme.accent)
                     Text(model.details?.releaseBadge ?? movie.releaseBadge)
-                        .font(.subheadline.black).foregroundStyle(.white)
+                        .font(.subheadline.weight(.black)).foregroundStyle(.white)
                 }
             }.padding(.bottom, 20)
         }
@@ -73,7 +73,7 @@ struct MovieDetailView: View {
             HStack(alignment: .center, spacing: 16) {
                 Image(systemName: "calendar.badge.clock").font(.title).foregroundStyle(CineTheme.accent)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(model.details?.releaseBadge ?? movie.releaseBadge).font(.title3.black)
+                    Text(model.details?.releaseBadge ?? movie.releaseBadge).font(.title3.weight(.black))
                     Text(model.details?.formattedReleaseDate ?? movie.formattedReleaseDate).foregroundStyle(CineTheme.secondaryText)
                 }
                 Spacer()
