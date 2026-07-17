@@ -5,9 +5,8 @@ final class MovieDetailViewModel: ObservableObject {
     @Published var details: MovieDetails?
     @Published var loading = true
     @Published var errorMessage: String?
-
     func load(id: Int) async {
-        loading = true
+        loading = true; errorMessage = nil
         do { details = try await TMDBService.shared.details(id: id) }
         catch { errorMessage = "Non è stato possibile caricare tutti i dettagli." }
         loading = false
@@ -23,162 +22,129 @@ struct MovieDetailView: View {
     var body: some View {
         ZStack {
             CineTheme.background.ignoresSafeArea()
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
-                    hero
-                    if model.loading {
-                        LoadingStateView(message: "Carico la scheda…")
-                    } else if let details = model.details {
-                        detailContent(details)
-                    } else {
-                        Text(model.errorMessage ?? "Dettagli non disponibili")
-                            .foregroundStyle(CineTheme.secondaryText)
-                            .padding(30)
+                    cinematicHeader
+                    VStack(alignment: .leading, spacing: 24) {
+                        releaseCard
+                        if model.loading { LoadingStateView(message: "Carico la scheda…") }
+                        else if let details = model.details { detailsBody(details) }
+                        else { Text(model.errorMessage ?? "Dettagli non disponibili").foregroundStyle(CineTheme.secondaryText) }
                     }
+                    .padding(.horizontal, 18).padding(.top, 22).padding(.bottom, 40)
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.bottom, 120)
             }
         }
-        .toolbarBackground(CineTheme.background.opacity(0.95), for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(CineTheme.background.opacity(0.96), for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .task { await model.load(id: movie.id) }
     }
 
-    private var hero: some View {
-        VStack(spacing: 0) {
-            ZStack(alignment: .bottom) {
-                RemoteImage(url: model.details?.backdropURL ?? movie.backdropURL)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 310)
-                    .clipped()
-                LinearGradient(
-                    colors: [.clear, CineTheme.background.opacity(0.72), CineTheme.background],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            }
-
-            VStack(spacing: 16) {
+    private var cinematicHeader: some View {
+        ZStack(alignment: .bottom) {
+            RemoteImage(url: model.details?.backdropURL ?? movie.backdropURL)
+                .frame(height: 430).clipped()
+            CineTheme.backdropGradient
+            VStack(spacing: 14) {
                 RemoteImage(url: model.details?.posterURL ?? movie.posterURL)
-                    .frame(width: 150, height: 225)
-                    .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 22).stroke(.white.opacity(0.15)))
-                    .shadow(color: .black.opacity(0.5), radius: 20, y: 10)
-                    .padding(.top, -145)
-
+                    .frame(width: 142, height: 210).clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.white.opacity(0.18)))
+                    .shadow(color: .black.opacity(0.65), radius: 18, y: 10)
                 Text(model.details?.title ?? movie.title)
-                    .font(.system(size: 30, weight: .black, design: .rounded))
-                    .foregroundStyle(.white)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 24)
-
-                HStack(spacing: 16) {
+                    .font(.system(size: 31, weight: .black, design: .rounded))
+                    .multilineTextAlignment(.center).lineLimit(3).minimumScaleFactor(0.75)
+                    .padding(.horizontal, 22)
+                HStack(spacing: 14) {
                     Label(String(format: "%.1f", model.details?.voteAverage ?? movie.voteAverage), systemImage: "star.fill")
-                        .foregroundStyle(.yellow)
-                    Text((model.details?.releaseBadge ?? movie.releaseBadge).uppercased())
                         .foregroundStyle(CineTheme.accent)
+                    Text(model.details?.releaseBadge ?? movie.releaseBadge)
+                        .font(.subheadline.black).foregroundStyle(.white)
                 }
-                .font(.subheadline.bold())
-
-                Button { favorites.toggle(movie) } label: {
-                    Label(
-                        favorites.contains(movie) ? "Nella mia lista" : "Aggiungi alla mia lista",
-                        systemImage: favorites.contains(movie) ? "heart.fill" : "heart"
-                    )
-                    .font(.subheadline.bold())
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(CineTheme.gradient)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                }
-                .padding(.horizontal, 24)
-            }
+            }.padding(.bottom, 20)
         }
+        .frame(height: 500)
     }
 
-    @ViewBuilder
-    private func detailContent(_ details: MovieDetails) -> some View {
-        VStack(alignment: .leading, spacing: 22) {
-            releaseCard(details)
-
-            if !details.genres.isEmpty {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(details.genres) { genre in
-                            Text(genre.name)
-                                .font(.caption.bold()).foregroundStyle(.white)
-                                .padding(.horizontal, 12).padding(.vertical, 8)
-                                .background(CineTheme.cardStrong)
-                                .clipShape(Capsule())
-                        }
-                    }
-                }
-            }
-
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Trama").font(.title2.bold()).foregroundStyle(.white)
-                Text(details.overview.isEmpty ? "Trama non ancora disponibile in italiano." : details.overview)
-                    .font(.body)
-                    .foregroundStyle(.white.opacity(0.82))
-                    .lineSpacing(5)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            if let url = details.trailerURL {
-                Button { openURL(url) } label: {
-                    Label("Guarda il trailer", systemImage: "play.rectangle.fill")
-                        .font(.headline).foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(CineTheme.gradient)
-                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                }
-            }
-
-            if let cast = details.credits?.cast.prefix(12), !cast.isEmpty {
-                VStack(alignment: .leading, spacing: 14) {
-                    Text("Cast principale").font(.title2.bold()).foregroundStyle(.white)
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(alignment: .top, spacing: 14) {
-                            ForEach(Array(cast)) { person in
-                                VStack(spacing: 7) {
-                                    RemoteImage(url: person.imageURL)
-                                        .frame(width: 92, height: 120)
-                                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                                    Text(person.name).font(.caption.bold()).foregroundStyle(.white).lineLimit(2)
-                                    Text(person.character ?? "").font(.caption2).foregroundStyle(CineTheme.secondaryText).lineLimit(1)
-                                }.frame(width: 94)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 24)
-    }
-
-    private func releaseCard(_ details: MovieDetails) -> some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack {
-                Image(systemName: "calendar.badge.clock").font(.title2).foregroundStyle(CineTheme.accent)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(details.releaseBadge).font(.headline).foregroundStyle(.white)
-                    Text(details.formattedReleaseDate).font(.subheadline).foregroundStyle(CineTheme.secondaryText)
+    private var releaseCard: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            Text("USCITA IN ITALIA").font(.caption.weight(.black)).tracking(1.8).foregroundStyle(CineTheme.accent)
+            HStack(alignment: .center, spacing: 16) {
+                Image(systemName: "calendar.badge.clock").font(.title).foregroundStyle(CineTheme.accent)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(model.details?.releaseBadge ?? movie.releaseBadge).font(.title3.black)
+                    Text(model.details?.formattedReleaseDate ?? movie.formattedReleaseDate).foregroundStyle(CineTheme.secondaryText)
                 }
                 Spacer()
             }
-            if let runtime = details.runtime {
-                Divider().overlay(.white.opacity(0.1))
-                Label("Durata: \(runtime) minuti", systemImage: "clock.fill")
-                    .font(.subheadline.weight(.semibold)).foregroundStyle(.white.opacity(0.88))
+            Button {
+                favorites.toggle(movie)
+            } label: {
+                Label(favorites.contains(movie) ? "Nella mia lista" : "Aggiungi alla mia lista", systemImage: favorites.contains(movie) ? "checkmark.circle.fill" : "plus.circle.fill")
+                    .font(.headline).frame(maxWidth: .infinity).padding(.vertical, 14)
+                    .foregroundStyle(.black).background(CineTheme.accent).clipShape(RoundedRectangle(cornerRadius: 14))
+            }
+        }.padding(18).cineCard(cornerRadius: 22)
+    }
+
+    @ViewBuilder
+    private func detailsBody(_ details: MovieDetails) -> some View {
+        if !details.genres.isEmpty {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 9) {
+                    ForEach(details.genres) { genre in
+                        Text(genre.name).font(.caption.bold()).foregroundStyle(.white)
+                            .padding(.horizontal, 12).padding(.vertical, 8)
+                            .background(CineTheme.surfaceRaised).clipShape(Capsule())
+                    }
+                }
             }
         }
-        .padding(18)
-        .cineCard(cornerRadius: 20)
+
+        VStack(alignment: .leading, spacing: 12) {
+            Text("LA STORIA").font(.caption.weight(.black)).tracking(1.8).foregroundStyle(CineTheme.accent)
+            Text(details.overview.isEmpty ? "Trama non disponibile in italiano." : details.overview)
+                .font(.body).foregroundStyle(.white.opacity(0.88)).lineSpacing(6).fixedSize(horizontal: false, vertical: true)
+        }
+
+        HStack(spacing: 12) {
+            infoBox(icon: "clock.fill", title: "Durata", value: details.runtime.map { "\($0) min" } ?? "Non indicata")
+            infoBox(icon: "film.fill", title: "Formato", value: "Cinema")
+        }
+
+        if let trailer = details.trailerURL {
+            Button { openURL(trailer) } label: {
+                HStack { Image(systemName: "play.fill"); Text("Guarda il trailer") }
+                    .font(.headline).foregroundStyle(.black).frame(maxWidth: .infinity).padding(.vertical, 15)
+                    .background(CineTheme.gradient).clipShape(RoundedRectangle(cornerRadius: 15))
+            }
+        }
+
+        if let cast = details.credits?.cast.prefix(12), !cast.isEmpty {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("CAST PRINCIPALE").font(.caption.weight(.black)).tracking(1.8).foregroundStyle(CineTheme.accent)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(alignment: .top, spacing: 14) {
+                        ForEach(Array(cast)) { person in
+                            VStack(spacing: 8) {
+                                RemoteImage(url: person.imageURL).frame(width: 86, height: 108).clipped()
+                                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                                Text(person.name).font(.caption.bold()).lineLimit(2).multilineTextAlignment(.center)
+                                Text(person.character ?? "").font(.caption2).foregroundStyle(CineTheme.secondaryText).lineLimit(2).multilineTextAlignment(.center)
+                            }.frame(width: 94)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func infoBox(icon: String, title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: icon).foregroundStyle(CineTheme.accent)
+            Text(title).font(.caption).foregroundStyle(CineTheme.secondaryText)
+            Text(value).font(.headline)
+        }.padding(16).frame(maxWidth: .infinity, alignment: .leading).cineCard(cornerRadius: 18)
     }
 }

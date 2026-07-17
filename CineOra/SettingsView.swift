@@ -1,95 +1,68 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var notificationsEnabled = false
-    @State private var showAbout = false
-
     var body: some View {
         ZStack {
             CineTheme.background.ignoresSafeArea()
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 22) {
                     header
                     featureCard
                     informationCard
                     creditsCard
-                }
-                .padding(.horizontal, 18)
-                .padding(.bottom, 120)
+                    Text("Versione 1.0 • Build 4").font(.caption).foregroundStyle(CineTheme.secondaryText).frame(maxWidth: .infinity)
+                }.padding(.horizontal, 18).padding(.top, 12).padding(.bottom, 40)
             }
-        }
-        .navigationTitle("Altro")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(CineTheme.background, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .alert("Notifiche in arrivo", isPresented: $notificationsEnabled) {
-            Button("Va bene", role: .cancel) { }
-        } message: {
-            Text("Nella prossima build potrai ricevere un avviso quando esce un film salvato nella tua lista.")
-        }
+        }.toolbar(.hidden, for: .navigationBar)
     }
 
     private var header: some View {
-        ZStack(alignment: .bottomLeading) {
-            LinearGradient(colors: [CineTheme.accent2.opacity(0.9), CineTheme.accent.opacity(0.85)], startPoint: .topLeading, endPoint: .bottomTrailing)
-            Circle().fill(.white.opacity(0.09)).frame(width: 150).offset(x: 220, y: -30)
-            VStack(alignment: .leading, spacing: 8) {
-                Image(systemName: "popcorn.fill").font(.system(size: 36)).foregroundStyle(.white)
-                Text("CineOra").font(.system(size: 32, weight: .black, design: .rounded))
-                Text("Tutto il cinema, nel momento giusto.").font(.subheadline).foregroundStyle(.white.opacity(0.84))
-                Text("Versione 1.0 • Build 2").font(.caption.bold()).foregroundStyle(.white.opacity(0.68))
-            }.padding(22)
+        VStack(alignment: .leading, spacing: 8) {
+            Text("CINEORA").font(.caption.weight(.black)).tracking(2).foregroundStyle(CineTheme.accent)
+            Text("Il tuo cinema personale").font(.system(size: 30, weight: .black, design: .rounded))
+            Text("Date, uscite e titoli da non perdere, tutti in un solo posto.").foregroundStyle(CineTheme.secondaryText)
         }
-        .frame(height: 210)
-        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
     }
 
     private var featureCard: some View {
-        VStack(spacing: 0) {
-            settingRow(icon: "bell.badge.fill", title: "Notifiche sulle uscite", subtitle: "Avvisi per i film della tua lista") {
-                notificationsEnabled = true
-            }
-            Divider().overlay(.white.opacity(0.08)).padding(.leading, 68)
-            settingRow(icon: "calendar", title: "Calendario uscite", subtitle: "Date italiane mostrate in ogni scheda") { }
-            Divider().overlay(.white.opacity(0.08)).padding(.leading, 68)
-            settingRow(icon: "moon.stars.fill", title: "Tema cinema", subtitle: "Grafica ottimizzata in modalità scura") { }
-        }.cineCard(cornerRadius: 24)
+        VStack(alignment: .leading, spacing: 0) {
+            settingRow(icon: "bell.badge.fill", title: "Promemoria uscite", subtitle: "In arrivo in una prossima versione")
+            Divider().overlay(CineTheme.divider).padding(.leading, 66)
+            settingRow(icon: "heart.fill", title: "La mia lista", subtitle: "Film salvati sul dispositivo")
+            Divider().overlay(CineTheme.divider).padding(.leading, 66)
+            settingRow(icon: "moon.stars.fill", title: "Tema cinematografico", subtitle: "Interfaccia scura ottimizzata")
+        }.cineCard(cornerRadius: 22)
     }
 
     private var informationCard: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Label("Informazioni", systemImage: "info.circle.fill").font(.headline).foregroundStyle(.white)
-            Text("CineOra mostra i film attualmente nelle sale italiane, le prossime uscite, i titoli popolari e le date di uscita disponibili.")
-                .font(.subheadline).foregroundStyle(CineTheme.secondaryText).lineSpacing(4)
-            Text("Gli orari dei singoli cinema e la disponibilità dei biglietti non sono inclusi in questa versione.")
+            Label("Cosa trovi in CineOra", systemImage: "sparkles.tv.fill").font(.headline).foregroundStyle(CineTheme.accent)
+            Text("Film attualmente nelle sale, prossime uscite, date italiane, categorie, trailer, cast e una lista personale.")
+                .foregroundStyle(.white.opacity(0.86)).lineSpacing(5)
+            Text("Gli orari dei singoli cinema e i biglietti non sono ancora inclusi.")
                 .font(.caption).foregroundStyle(CineTheme.secondaryText)
         }.padding(18).cineCard(cornerRadius: 22)
     }
 
     private var creditsCard: some View {
-        VStack(alignment: .leading, spacing: 13) {
-            Label("Crediti e dati", systemImage: "database.fill").font(.headline).foregroundStyle(.white)
+        VStack(alignment: .leading, spacing: 12) {
+            Label("Dati cinematografici", systemImage: "externaldrive.fill").font(.headline).foregroundStyle(CineTheme.accent)
             TMDBCreditView()
             Text("Questo prodotto utilizza l’API TMDB ma non è approvato o certificato da TMDB.")
-                .font(.caption).foregroundStyle(CineTheme.secondaryText).lineSpacing(3)
+                .font(.caption).foregroundStyle(CineTheme.secondaryText).lineSpacing(4)
         }.padding(18).cineCard(cornerRadius: 22)
     }
 
-    private func settingRow(icon: String, title: String, subtitle: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack(spacing: 14) {
-                Image(systemName: icon)
-                    .font(.title3).foregroundStyle(.white)
-                    .frame(width: 42, height: 42)
-                    .background(CineTheme.gradient).clipShape(RoundedRectangle(cornerRadius: 13))
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(title).font(.body.weight(.semibold)).foregroundStyle(.white)
-                    Text(subtitle).font(.caption).foregroundStyle(CineTheme.secondaryText)
-                }
-                Spacer()
-                Image(systemName: "chevron.right").font(.caption.bold()).foregroundStyle(CineTheme.secondaryText)
-            }.padding(15)
-        }.buttonStyle(.plain)
+    private func settingRow(icon: String, title: String, subtitle: String) -> some View {
+        HStack(spacing: 14) {
+            Image(systemName: icon).font(.title3).foregroundStyle(CineTheme.accent)
+                .frame(width: 42, height: 42).background(CineTheme.surfaceRaised).clipShape(RoundedRectangle(cornerRadius: 12))
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title).font(.body.weight(.bold))
+                Text(subtitle).font(.caption).foregroundStyle(CineTheme.secondaryText)
+            }
+            Spacer()
+        }.padding(15)
     }
 }
 

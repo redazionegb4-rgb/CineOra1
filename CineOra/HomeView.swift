@@ -25,18 +25,19 @@ struct HomeView: View {
     var body: some View {
         ZStack {
             CineTheme.background.ignoresSafeArea()
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 28) {
-                    header
-                    if model.isLoading { LoadingStateView(message: "Accendiamo il proiettore…") }
+            ScrollView(showsIndicators: false) {
+                LazyVStack(alignment: .leading, spacing: 30) {
+                    masthead
+                    if model.isLoading { LoadingStateView(message: "Prepariamo la sala…") }
                     else if let error = model.error { errorView(error) }
                     else {
                         if let featured = model.nowPlaying.first { HeroMovieView(movie: featured) }
-                        movieSection("Ora al cinema", subtitle: "I titoli disponibili nelle sale italiane", movies: model.nowPlaying)
-                        movieSection("Prossimamente", subtitle: "Le uscite da non perdere", movies: model.upcoming)
-                        movieSection("Popolari", subtitle: "I film più cercati del momento", movies: model.popular)
+                        releaseStrip
+                        movieSection("Nelle sale", subtitle: "I film disponibili adesso", movies: Array(model.nowPlaying.dropFirst()))
+                        movieSection("Prossime uscite", subtitle: "Segna la data sul calendario", movies: model.upcoming)
+                        movieSection("Più popolari", subtitle: "I titoli di cui parlano tutti", movies: model.popular)
                     }
-                    TMDBCreditView().padding(.bottom, 20)
+                    TMDBCreditView().padding(.bottom, 24)
                 }.padding(.horizontal, 18)
             }.refreshable { await model.load() }
         }
@@ -45,22 +46,58 @@ struct HomeView: View {
         .toolbar(.hidden, for: .navigationBar)
     }
 
-    private var header: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) { Text("CINEORA").font(.system(size: 29, weight: .black, design: .rounded)); Text("Il cinema, adesso.").foregroundStyle(CineTheme.secondaryText) }
+    private var masthead: some View {
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text("CINEORA").font(.system(size: 31, weight: .black, design: .rounded)).tracking(1)
+                Text("La tua guida alle uscite in sala").font(.subheadline).foregroundStyle(CineTheme.secondaryText)
+            }
             Spacer()
-            Image(systemName: "sparkles.tv.fill").font(.title2).foregroundStyle(CineTheme.gradient).padding(12).background(CineTheme.card).clipShape(Circle())
-        }.padding(.top, 8)
+            ZStack {
+                Circle().fill(CineTheme.surfaceRaised)
+                Image(systemName: "ticket.fill").foregroundStyle(CineTheme.accent).font(.title2)
+            }.frame(width: 48, height: 48)
+        }.padding(.top, 10)
+    }
+
+    private var releaseStrip: some View {
+        VStack(alignment: .leading, spacing: 13) {
+            SectionTitle(title: "Calendario cinema", subtitle: "Le prossime date da ricordare")
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(Array(model.upcoming.prefix(6))) { movie in
+                        NavigationLink(value: movie) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(movie.releaseBadge.uppercased()).font(.caption2.weight(.black)).foregroundStyle(CineTheme.accent)
+                                Text(movie.title).font(.subheadline.bold()).foregroundStyle(.white).lineLimit(2)
+                                Text(movie.formattedReleaseDate).font(.caption).foregroundStyle(CineTheme.secondaryText)
+                            }
+                            .padding(15).frame(width: 190, height: 112, alignment: .leading)
+                            .background(CineTheme.surface)
+                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .overlay(alignment: .leading) { Rectangle().fill(CineTheme.accent).frame(width: 4).clipShape(Capsule()).padding(.vertical, 14) }
+                        }.buttonStyle(.plain)
+                    }
+                }
+            }
+        }
     }
 
     private func movieSection(_ title: String, subtitle: String, movies: [Movie]) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             SectionTitle(title: title, subtitle: subtitle)
-            ScrollView(.horizontal, showsIndicators: false) { LazyHStack(alignment: .top, spacing: 14) { ForEach(movies) { MoviePosterCard(movie: $0) } } }
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(alignment: .top, spacing: 14) { ForEach(movies) { MoviePosterCard(movie: $0) } }
+            }
         }
     }
+
     private func errorView(_ message: String) -> some View {
-        VStack(spacing: 14) { Image(systemName: "wifi.exclamationmark").font(.largeTitle); Text(message).multilineTextAlignment(.center); Button("Riprova") { Task { await model.load() } }.buttonStyle(.borderedProminent).tint(CineTheme.accent) }.frame(maxWidth: .infinity, minHeight: 260)
+        VStack(spacing: 14) {
+            Image(systemName: "wifi.exclamationmark").font(.largeTitle).foregroundStyle(CineTheme.accent)
+            Text(message).multilineTextAlignment(.center)
+            Button("Riprova") { Task { await model.load() } }.buttonStyle(.borderedProminent).tint(CineTheme.accent)
+        }.frame(maxWidth: .infinity, minHeight: 260)
     }
 }
 
@@ -69,17 +106,22 @@ struct HeroMovieView: View {
     var body: some View {
         NavigationLink(value: movie) {
             ZStack(alignment: .bottomLeading) {
-                RemoteImage(url: movie.backdropURL).frame(height: 300).clipped()
-                LinearGradient(colors: [.clear, CineTheme.background.opacity(0.95)], startPoint: .center, endPoint: .bottom)
+                RemoteImage(url: movie.backdropURL).frame(height: 360).clipped()
+                LinearGradient(colors: [.clear, .black.opacity(0.12), CineTheme.background.opacity(0.98)], startPoint: .top, endPoint: .bottom)
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("IN PRIMO PIANO").font(.caption.bold()).tracking(1.4).foregroundStyle(CineTheme.accent)
-                    Text(movie.title).font(.system(size: 30, weight: .black, design: .rounded)).lineLimit(2)
-                    HStack { Label(movie.formattedRating, systemImage: "star.fill"); if !movie.year.isEmpty { Text("•"); Text(movie.year) } }
-                        .font(.subheadline.weight(.semibold)).foregroundStyle(.white.opacity(0.85))
-                    Label("Scopri il film", systemImage: "play.fill").font(.subheadline.bold()).padding(.horizontal, 15).padding(.vertical, 10).background(CineTheme.gradient).clipShape(Capsule())
+                    Text("FILM DEL MOMENTO").font(.caption2.weight(.black)).tracking(1.6).foregroundStyle(CineTheme.accent)
+                    Text(movie.title).font(.system(size: 32, weight: .black, design: .rounded)).lineLimit(2)
+                    ReleaseInfoPill(movie: movie)
+                    HStack(spacing: 12) {
+                        Label("Scheda film", systemImage: "info.circle.fill")
+                            .font(.subheadline.bold()).foregroundStyle(.black)
+                            .padding(.horizontal, 16).padding(.vertical, 11).background(CineTheme.accent).clipShape(Capsule())
+                        Label(movie.formattedRating, systemImage: "star.fill").font(.subheadline.bold()).foregroundStyle(.white)
+                    }
                 }.padding(20)
             }
-            .frame(height: 300).clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .frame(height: 360).clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 26).stroke(CineTheme.divider))
         }.buttonStyle(.plain)
     }
 }

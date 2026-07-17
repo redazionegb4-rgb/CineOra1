@@ -4,16 +4,18 @@ struct RootView: View {
     var body: some View {
         TabView {
             NavigationStack { HomeView() }
-                .tabItem { Label("Cinema", systemImage: "popcorn.fill") }
+                .tabItem { Label("Cinema", systemImage: "film.stack.fill") }
             NavigationStack { CategoriesView() }
-                .tabItem { Label("Categorie", systemImage: "square.grid.2x2.fill") }
+                .tabItem { Label("Generi", systemImage: "rectangle.3.group.fill") }
             NavigationStack { SearchMoviesView() }
                 .tabItem { Label("Cerca", systemImage: "magnifyingglass") }
             NavigationStack { FavoritesView() }
-                .tabItem { Label("La mia lista", systemImage: "heart.fill") }
+                .tabItem { Label("Lista", systemImage: "bookmark.fill") }
             NavigationStack { SettingsView() }
-                .tabItem { Label("Altro", systemImage: "ellipsis.circle.fill") }
+                .tabItem { Label("Info", systemImage: "info.circle.fill") }
         }
         .tint(CineTheme.accent)
+        .toolbarBackground(CineTheme.surface, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
     }
 }

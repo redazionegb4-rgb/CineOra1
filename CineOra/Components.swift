@@ -7,59 +7,89 @@ struct RemoteImage: View {
             switch phase {
             case .success(let image): image.resizable().scaledToFill()
             case .failure: placeholder
-            case .empty: ZStack { placeholder; ProgressView().tint(.white) }
+            case .empty: ZStack { placeholder; ProgressView().tint(CineTheme.accent) }
             @unknown default: placeholder
             }
         }
     }
     private var placeholder: some View {
         ZStack {
-            LinearGradient(colors: [.gray.opacity(0.45), .black], startPoint: .topLeading, endPoint: .bottomTrailing)
-            Image(systemName: "film.fill").font(.largeTitle).foregroundStyle(.white.opacity(0.5))
+            CineTheme.surfaceRaised
+            Image(systemName: "film.stack.fill").font(.largeTitle).foregroundStyle(CineTheme.accent.opacity(0.65))
         }
     }
 }
 
 struct MoviePosterCard: View {
     let movie: Movie
-    var width: CGFloat = 145
+    var width: CGFloat = 148
     var body: some View {
         NavigationLink(value: movie) {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 9) {
                 ZStack(alignment: .bottomLeading) {
                     RemoteImage(url: movie.posterURL)
-                        .frame(width: width, height: width * 1.5)
-                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                    Text(movie.releaseBadge)
-                        .font(.caption2.bold())
-                        .padding(.horizontal, 8).padding(.vertical, 5)
-                        .background(.ultraThinMaterial)
+                        .frame(width: width, height: width * 1.48)
+                        .clipped()
+                    LinearGradient(colors: [.clear, .black.opacity(0.74)], startPoint: .center, endPoint: .bottom)
+                    Text(movie.releaseBadge.uppercased())
+                        .font(.system(size: 10, weight: .black, design: .rounded))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 9).padding(.vertical, 6)
+                        .background(CineTheme.accent.opacity(0.95))
                         .clipShape(Capsule())
-                        .padding(8)
+                        .padding(9)
                 }
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .overlay(alignment: .topTrailing) {
-                    Label(movie.formattedRating, systemImage: "star.fill")
-                        .font(.caption2.bold()).foregroundStyle(.white)
-                        .padding(.horizontal, 7).padding(.vertical, 5)
-                        .background(.black.opacity(0.62)).clipShape(Capsule()).padding(7)
+                    HStack(spacing: 4) {
+                        Image(systemName: "star.fill").foregroundStyle(CineTheme.accent)
+                        Text(movie.formattedRating)
+                    }
+                    .font(.caption2.bold()).foregroundStyle(.white)
+                    .padding(.horizontal, 8).padding(.vertical, 6)
+                    .background(.black.opacity(0.72)).clipShape(Capsule()).padding(8)
                 }
                 Text(movie.title)
-                    .font(.subheadline.weight(.semibold)).lineLimit(2)
+                    .font(.subheadline.weight(.bold)).lineLimit(2)
                     .multilineTextAlignment(.leading).foregroundStyle(.white)
                 Text(movie.formattedReleaseDate)
-                    .font(.caption2).foregroundStyle(CineTheme.secondaryText).lineLimit(1)
-            }.frame(width: width, alignment: .leading)
+                    .font(.caption).foregroundStyle(CineTheme.secondaryText).lineLimit(1)
+            }
+            .frame(width: width, alignment: .leading)
         }.buttonStyle(.plain)
     }
 }
 
 struct SectionTitle: View {
-    let title: String; var subtitle: String? = nil
+    let title: String
+    var subtitle: String? = nil
+    var actionTitle: String? = nil
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title).font(.title2.bold()).foregroundStyle(.white)
-            if let subtitle { Text(subtitle).font(.subheadline).foregroundStyle(CineTheme.secondaryText) }
+        HStack(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title).font(.title2.weight(.black)).foregroundStyle(.white)
+                if let subtitle { Text(subtitle).font(.subheadline).foregroundStyle(CineTheme.secondaryText) }
+            }
+            Spacer()
+            if let actionTitle { Text(actionTitle).font(.caption.bold()).foregroundStyle(CineTheme.accent) }
         }
+    }
+}
+
+struct ReleaseInfoPill: View {
+    let movie: Movie
+    var body: some View {
+        HStack(spacing: 7) {
+            Image(systemName: "calendar.badge.clock")
+            Text(movie.releaseBadge)
+            Text("•")
+            Text(movie.formattedReleaseDate)
+        }
+        .font(.caption.weight(.semibold))
+        .foregroundStyle(.white)
+        .padding(.horizontal, 12).padding(.vertical, 8)
+        .background(CineTheme.surfaceRaised)
+        .clipShape(Capsule())
     }
 }
 

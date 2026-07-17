@@ -1,11 +1,8 @@
-# CineOra – Build 2
+# CineOra – Build 4
 
-Aggiornamenti:
-- Scheda film completamente centrata e leggibile.
-- Data italiana e stato dell'uscita messi in evidenza.
-- Trama, trailer e cast ridisegnati.
-- Pagina Altro completamente rinnovata.
-- Date di uscita visibili anche sulle locandine.
-- Migliorati contrasto, spaziature e adattamento ai diversi iPhone.
+Nuova identità grafica cinematografica, distinta dagli altri progetti: palette nero/blu notte e ambra, Home editoriale, calendario uscite, scheda film ricostruita, generi, ricerca, lista e pagina informazioni ridisegnate.
 
-Aprire `CineOra.xcodeproj` e caricare l'intera cartella nel repository GitHub.
+Bundle ID: com.dmb.cineora
+Versione: 1.0
+Build: 4
+Minimo iOS: 17.0
