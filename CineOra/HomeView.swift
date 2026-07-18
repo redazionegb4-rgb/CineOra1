@@ -40,6 +40,7 @@ struct HomeView: View {
                         if !model.nowPlaying.isEmpty {
                             RotatingHeroCarousel(movies: Array(model.nowPlaying.prefix(6)))
                         }
+                        nearbyCinemaCard
                         releaseStrip
                         movieSection("Nelle sale", subtitle: "I film disponibili adesso", movies: model.nowPlaying)
                         movieSection("Prossime uscite", subtitle: "Scopri quando arrivano al cinema", movies: model.upcoming)
@@ -67,13 +68,48 @@ struct HomeView: View {
                     .foregroundStyle(CineTheme.secondaryText)
             }
             Spacer()
-            ZStack {
-                Circle().fill(CineTheme.surfaceRaised)
-                Image(systemName: "ticket.fill").foregroundStyle(CineTheme.accent).font(.title2)
+            NavigationLink {
+                CinemaNearbyView()
+            } label: {
+                ZStack {
+                    Circle().fill(CineTheme.surfaceRaised)
+                    Image(systemName: "mappin.and.ellipse").foregroundStyle(CineTheme.accent).font(.title2)
+                }
+                .frame(width: 48, height: 48)
             }
-            .frame(width: 48, height: 48)
+            .buttonStyle(.plain)
         }
         .padding(.top, 10)
+    }
+
+    private var nearbyCinemaCard: some View {
+        NavigationLink {
+            CinemaNearbyView()
+        } label: {
+            HStack(spacing: 15) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16).fill(CineTheme.accent.opacity(0.16))
+                    Image(systemName: "mappin.and.ellipse")
+                        .font(.title2)
+                        .foregroundStyle(CineTheme.accent)
+                }
+                .frame(width: 58, height: 58)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Trova cinema vicino a te")
+                        .font(.headline.weight(.heavy))
+                        .foregroundStyle(.white)
+                    Text("Mappa, indirizzi e indicazioni")
+                        .font(.subheadline)
+                        .foregroundStyle(CineTheme.secondaryText)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(CineTheme.secondaryText)
+            }
+            .padding(16)
+            .cineCard(cornerRadius: 21)
+        }
+        .buttonStyle(.plain)
     }
 
     private var releaseStrip: some View {
@@ -139,25 +175,31 @@ private struct RotatingHeroCarousel: View {
     private let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
 
     var body: some View {
-        VStack(spacing: 12) {
-            TabView(selection: $selectedIndex) {
-                ForEach(Array(movies.enumerated()), id: \.element.id) { index, movie in
-                    HeroMovieView(movie: movie)
-                        .tag(index)
+        GeometryReader { proxy in
+            VStack(spacing: 12) {
+                TabView(selection: $selectedIndex) {
+                    ForEach(Array(movies.enumerated()), id: \.element.id) { index, movie in
+                        HeroMovieView(movie: movie)
+                            .frame(width: proxy.size.width)
+                            .tag(index)
+                    }
                 }
-            }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .frame(height: 370)
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .frame(width: proxy.size.width, height: 390)
+                .clipped()
 
-            HStack(spacing: 7) {
-                ForEach(movies.indices, id: \.self) { index in
-                    Capsule()
-                        .fill(index == selectedIndex ? CineTheme.accent : Color.white.opacity(0.22))
-                        .frame(width: index == selectedIndex ? 22 : 7, height: 7)
-                        .animation(.easeInOut(duration: 0.25), value: selectedIndex)
+                HStack(spacing: 7) {
+                    ForEach(movies.indices, id: \.self) { index in
+                        Capsule()
+                            .fill(index == selectedIndex ? CineTheme.accent : Color.white.opacity(0.22))
+                            .frame(width: index == selectedIndex ? 22 : 7, height: 7)
+                            .animation(.easeInOut(duration: 0.25), value: selectedIndex)
+                    }
                 }
+                .frame(maxWidth: .infinity)
             }
         }
+        .frame(height: 409)
         .onReceive(timer) { _ in
             guard movies.count > 1 else { return }
             withAnimation(.easeInOut(duration: 0.45)) {
@@ -173,39 +215,59 @@ struct HeroMovieView: View {
     var body: some View {
         NavigationLink(value: movie) {
             ZStack(alignment: .bottomLeading) {
-                RemoteImage(url: movie.backdropURL).frame(height: 360).clipped()
-                LinearGradient(colors: [.clear, .black.opacity(0.12), CineTheme.background.opacity(0.98)], startPoint: .top, endPoint: .bottom)
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("ORA AL CINEMA")
+                RemoteImage(url: movie.backdropURL)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 390)
+                    .clipped()
+
+                LinearGradient(
+                    colors: [.black.opacity(0.05), .black.opacity(0.18), CineTheme.background.opacity(0.98)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(movie.releaseBadge.uppercased())
                         .font(.caption2.weight(.heavy))
-                        .tracking(1.6)
+                        .tracking(1.4)
                         .foregroundStyle(CineTheme.accent)
-                    Text(movie.title)
-                        .font(.system(size: 31, weight: .heavy, design: .rounded))
-                        .lineLimit(2)
-                    Text("\(movie.releaseBadge) • \(movie.formattedReleaseDate)")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.86))
                         .lineLimit(1)
-                        .minimumScaleFactor(0.75)
+
+                    Text(movie.title)
+                        .font(.system(size: 30, weight: .heavy, design: .rounded))
+                        .foregroundStyle(.white)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text(movie.formattedReleaseDate)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white.opacity(0.88))
+                        .lineLimit(1)
+
                     HStack(spacing: 12) {
                         Label("Apri scheda", systemImage: "info.circle.fill")
                             .font(.subheadline.weight(.bold))
                             .foregroundStyle(.black)
                             .padding(.horizontal, 16)
-                            .padding(.vertical, 11)
+                            .padding(.vertical, 10)
                             .background(CineTheme.accent)
                             .clipShape(Capsule())
+
                         Label(movie.formattedRating, systemImage: "star.fill")
                             .font(.subheadline.weight(.bold))
                             .foregroundStyle(.white)
                     }
                 }
-                .padding(20)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 18)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(height: 360)
+            .frame(maxWidth: .infinity)
+            .frame(height: 390)
             .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 26).stroke(CineTheme.divider))
+            .contentShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
         }
         .buttonStyle(.plain)
     }

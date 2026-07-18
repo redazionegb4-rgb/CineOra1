@@ -18,6 +18,8 @@
     <string>$(MARKETING_VERSION)</string>
     <key>CFBundleVersion</key>
     <string>$(CURRENT_PROJECT_VERSION)</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>CineOra usa la tua posizione solo per mostrarti i cinema nelle vicinanze.</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>UIApplicationSupportsIndirectInputEvents</key>

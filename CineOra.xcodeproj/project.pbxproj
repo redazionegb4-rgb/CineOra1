@@ -18,6 +18,7 @@
 		279E9298FB2E52BBA59FBD05 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264C62DABBCF50D0A6B18BB9 /* FavoritesView.swift */; };
 		70F92392865F5E36A4DF8E9B /* MovieDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD88F755A5955141950CA73E /* MovieDetailView.swift */; };
 		BCDFCC9020D757168D198B2A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8886D42B654D5F6B90AE077D /* SettingsView.swift */; };
+		A1B2C3D4E5F60718293A4B5C /* CinemaNearbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E3F40516273849A5B6C7 /* CinemaNearbyView.swift */; };
 		BC945197B0145CEFBAEEC2A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E9FBF44BBC953D9A8096CCC /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		264C62DABBCF50D0A6B18BB9 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		AD88F755A5955141950CA73E /* MovieDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailView.swift; sourceTree = "<group>"; };
 		8886D42B654D5F6B90AE077D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		C1D2E3F40516273849A5B6C7 /* CinemaNearbyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaNearbyView.swift; sourceTree = "<group>"; };
 		7E9FBF44BBC953D9A8096CCC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1C2E99A800AA53BAB2E9099C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDE073B604975A84A51957BD /* CineOra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CineOra.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +59,7 @@
 				264C62DABBCF50D0A6B18BB9 /* FavoritesView.swift */,
 				AD88F755A5955141950CA73E /* MovieDetailView.swift */,
 				8886D42B654D5F6B90AE077D /* SettingsView.swift */,
+				C1D2E3F40516273849A5B6C7 /* CinemaNearbyView.swift */,
 				7E9FBF44BBC953D9A8096CCC /* Assets.xcassets */,
 				1C2E99A800AA53BAB2E9099C /* Info.plist */,
 			); path = CineOra; sourceTree = "<group>"; };
@@ -86,13 +89,14 @@
 				279E9298FB2E52BBA59FBD05 /* FavoritesView.swift in Sources */,
 				70F92392865F5E36A4DF8E9B /* MovieDetailView.swift in Sources */,
 				BCDFCC9020D757168D198B2A /* SettingsView.swift in Sources */,
+				A1B2C3D4E5F60718293A4B5C /* CinemaNearbyView.swift in Sources */,
 			); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 /* Begin XCBuildConfiguration section */
 		FF9D1196C5A75BADB5F8D1EC = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; SWIFT_VERSION = 5.0; DEBUG_INFORMATION_FORMAT = dwarf; ENABLE_TESTABILITY = YES; GCC_OPTIMIZATION_LEVEL = 0; ONLY_ACTIVE_ARCH = YES; }; name = Debug; };
 		DDC27B9F2E5C54D2BB2E4261 = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; SWIFT_VERSION = 5.0; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; SWIFT_COMPILATION_MODE = wholemodule; }; name = Release; };
-		9AA3E36171325F29B000DE9D = {isa = XCBuildConfiguration; buildSettings = {ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 9; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = CineOra/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = com.dmb.cineora; PRODUCT_NAME = "$(TARGET_NAME)"; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_EMIT_LOC_STRINGS = YES; TARGETED_DEVICE_FAMILY = 1; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; }; name = Debug; };
-		BE07D922CCF756F389AAD211 = {isa = XCBuildConfiguration; buildSettings = {ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 9; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = CineOra/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = com.dmb.cineora; PRODUCT_NAME = "$(TARGET_NAME)"; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_EMIT_LOC_STRINGS = YES; TARGETED_DEVICE_FAMILY = 1; SWIFT_OPTIMIZATION_LEVEL = "-O"; }; name = Release; };
+		9AA3E36171325F29B000DE9D = {isa = XCBuildConfiguration; buildSettings = {ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 10; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = CineOra/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = com.dmb.cineora; PRODUCT_NAME = "$(TARGET_NAME)"; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_EMIT_LOC_STRINGS = YES; TARGETED_DEVICE_FAMILY = 1; SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; }; name = Debug; };
+		BE07D922CCF756F389AAD211 = {isa = XCBuildConfiguration; buildSettings = {ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 10; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = CineOra/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = com.dmb.cineora; PRODUCT_NAME = "$(TARGET_NAME)"; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; SWIFT_EMIT_LOC_STRINGS = YES; TARGETED_DEVICE_FAMILY = 1; SWIFT_OPTIMIZATION_LEVEL = "-O"; }; name = Release; };
 /* End XCBuildConfiguration section */
 /* Begin XCConfigurationList section */
 		27CD9AF81A1E59F2B825AFD0 = {isa = XCConfigurationList; buildConfigurations = (FF9D1196C5A75BADB5F8D1EC, DDC27B9F2E5C54D2BB2E4261); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
