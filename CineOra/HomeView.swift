@@ -172,7 +172,6 @@ struct HomeView: View {
 private struct RotatingHeroCarousel: View {
     let movies: [Movie]
     @State private var selectedIndex = 0
-    @State private var dragOffset: CGFloat = 0
     private let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
 
     private var currentMovie: Movie? {
@@ -184,34 +183,22 @@ private struct RotatingHeroCarousel: View {
         VStack(spacing: 13) {
             GeometryReader { proxy in
                 if let movie = currentMovie {
-                    HeroMovieView(movie: movie)
+                    HeroMovieView(movie: movie, width: proxy.size.width)
                         .frame(width: proxy.size.width, height: 410)
-                        .id(movie.id)
-                        .offset(x: dragOffset)
-                        .opacity(1 - min(abs(dragOffset) / 500, 0.35))
+                        .contentShape(Rectangle())
                         .gesture(
-                            DragGesture(minimumDistance: 18)
-                                .onChanged { value in
-                                    dragOffset = value.translation.width * 0.22
-                                }
+                            DragGesture(minimumDistance: 24)
                                 .onEnded { value in
-                                    let threshold: CGFloat = 45
-                                    if value.translation.width < -threshold {
+                                    if value.translation.width < -55 {
                                         showNext()
-                                    } else if value.translation.width > threshold {
+                                    } else if value.translation.width > 55 {
                                         showPrevious()
-                                    }
-                                    withAnimation(.spring(response: 0.32, dampingFraction: 0.84)) {
-                                        dragOffset = 0
                                     }
                                 }
                         )
-                        .transition(.opacity.combined(with: .scale(scale: 0.985)))
-                        .clipped()
                 }
             }
             .frame(height: 410)
-            .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
 
             HStack(spacing: 7) {
                 ForEach(movies.indices, id: \.self) { index in
@@ -221,18 +208,15 @@ private struct RotatingHeroCarousel: View {
                         .animation(.easeInOut(duration: 0.25), value: selectedIndex)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            withAnimation(.easeInOut(duration: 0.28)) {
-                                selectedIndex = index
-                            }
+                            selectedIndex = index
                         }
                 }
             }
             .frame(maxWidth: .infinity, alignment: .center)
         }
         .frame(maxWidth: .infinity)
-        .clipped()
         .onReceive(timer) { _ in
-            guard movies.count > 1, abs(dragOffset) < 1 else { return }
+            guard movies.count > 1 else { return }
             showNext()
         }
         .onChange(of: movies.count) { _, count in
@@ -243,14 +227,14 @@ private struct RotatingHeroCarousel: View {
 
     private func showNext() {
         guard movies.count > 1 else { return }
-        withAnimation(.easeInOut(duration: 0.38)) {
+        withAnimation(.easeInOut(duration: 0.25)) {
             selectedIndex = (selectedIndex + 1) % movies.count
         }
     }
 
     private func showPrevious() {
         guard movies.count > 1 else { return }
-        withAnimation(.easeInOut(duration: 0.38)) {
+        withAnimation(.easeInOut(duration: 0.25)) {
             selectedIndex = (selectedIndex - 1 + movies.count) % movies.count
         }
     }
@@ -258,25 +242,26 @@ private struct RotatingHeroCarousel: View {
 
 struct HeroMovieView: View {
     let movie: Movie
+    let width: CGFloat
 
     var body: some View {
         NavigationLink(value: movie) {
-            ZStack(alignment: .bottom) {
+            ZStack(alignment: .bottomLeading) {
                 RemoteImage(url: movie.backdropURL)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 410)
+                    .frame(width: width, height: 410)
                     .clipped()
 
                 LinearGradient(
                     stops: [
-                        .init(color: .black.opacity(0.03), location: 0.0),
-                        .init(color: .black.opacity(0.12), location: 0.42),
-                        .init(color: .black.opacity(0.76), location: 0.72),
-                        .init(color: .black.opacity(0.97), location: 1.0)
+                        .init(color: .black.opacity(0.02), location: 0.0),
+                        .init(color: .black.opacity(0.10), location: 0.42),
+                        .init(color: .black.opacity(0.78), location: 0.72),
+                        .init(color: .black.opacity(0.98), location: 1.0)
                     ],
                     startPoint: .top,
                     endPoint: .bottom
                 )
+                .frame(width: width, height: 410)
 
                 VStack(alignment: .leading, spacing: 10) {
                     Text(movie.releaseBadge.uppercased())
@@ -312,17 +297,15 @@ struct HeroMovieView: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 10)
-                            .background(.black.opacity(0.42))
+                            .background(.black.opacity(0.48))
                             .clipShape(Capsule())
                     }
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(width: width, alignment: .leading)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 410)
-            .clipped()
+            .frame(width: width, height: 410, alignment: .bottomLeading)
             .background(CineTheme.surface)
             .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
             .overlay(
@@ -332,5 +315,6 @@ struct HeroMovieView: View {
             .contentShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
         }
         .buttonStyle(.plain)
+        .frame(width: width, height: 410)
     }
 }
