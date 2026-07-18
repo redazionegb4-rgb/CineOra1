@@ -128,4 +128,3 @@ enum ReleaseDateFormatter {
         if daysSinceRelease <= 90 { return "Ultimi giorni al cinema" }
         return "Uscito nel \(calendar.component(.year, from: date))" }
     }
-}
