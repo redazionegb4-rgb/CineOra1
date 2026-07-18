@@ -59,16 +59,19 @@ struct MovieDetailView: View {
 
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
-                        .font(.system(size: 25, weight: .bold))
+                        .font(.system(size: 23, weight: .bold))
                         .foregroundStyle(.white)
-                        .frame(width: 52, height: 52)
+                        .frame(width: 48, height: 48)
+                        .background(Color.black.opacity(0.58), in: Circle())
                         .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().stroke(Color.white.opacity(0.14)))
-                        .shadow(color: .black.opacity(0.35), radius: 12, y: 5)
+                        .overlay(Circle().stroke(Color.white.opacity(0.18), lineWidth: 1))
+                        .shadow(color: .black.opacity(0.45), radius: 10, y: 4)
                 }
                 .buttonStyle(.plain)
-                .padding(.leading, 20)
-                .padding(.top, proxy.safeAreaInsets.top + 8)
+                .contentShape(Circle())
+                .padding(.leading, 16)
+                .padding(.top, max(proxy.safeAreaInsets.top, 8) + 2)
+                .zIndex(100)
             }
         }
         .toolbar(.hidden, for: .navigationBar)
