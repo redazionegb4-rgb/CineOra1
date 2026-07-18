@@ -28,7 +28,7 @@ struct MovieDetailView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            ZStack(alignment: .topLeading) {
+            ZStack {
                 CineTheme.background.ignoresSafeArea()
 
                 ScrollView(showsIndicators: false) {
@@ -56,22 +56,23 @@ struct MovieDetailView: View {
                     .frame(width: proxy.size.width)
                 }
                 .ignoresSafeArea(edges: .top)
-
+            }
+            // La freccia è un overlay esterno allo ScrollView: non può scorrere con la pagina.
+            .overlay(alignment: .topLeading) {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
-                        .font(.system(size: 23, weight: .bold))
+                        .font(.system(size: 22, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(width: 48, height: 48)
-                        .background(Color.black.opacity(0.58), in: Circle())
-                        .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().stroke(Color.white.opacity(0.18), lineWidth: 1))
+                        .background(Color.black.opacity(0.62), in: Circle())
+                        .overlay(Circle().stroke(Color.white.opacity(0.20), lineWidth: 1))
                         .shadow(color: .black.opacity(0.45), radius: 10, y: 4)
                 }
                 .buttonStyle(.plain)
                 .contentShape(Circle())
                 .padding(.leading, 16)
-                .padding(.top, max(proxy.safeAreaInsets.top, 8) + 2)
-                .zIndex(100)
+                .padding(.top, 8)
+                .zIndex(999)
             }
         }
         .toolbar(.hidden, for: .navigationBar)
