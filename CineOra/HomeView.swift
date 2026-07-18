@@ -182,30 +182,36 @@ private struct RotatingHeroCarousel: View {
 
     var body: some View {
         VStack(spacing: 13) {
-            if let movie = currentMovie {
-                HeroMovieView(movie: movie)
-                    .id(movie.id)
-                    .offset(x: dragOffset)
-                    .opacity(1 - min(abs(dragOffset) / 500, 0.35))
-                    .gesture(
-                        DragGesture(minimumDistance: 18)
-                            .onChanged { value in
-                                dragOffset = value.translation.width * 0.22
-                            }
-                            .onEnded { value in
-                                let threshold: CGFloat = 45
-                                if value.translation.width < -threshold {
-                                    showNext()
-                                } else if value.translation.width > threshold {
-                                    showPrevious()
+            GeometryReader { proxy in
+                if let movie = currentMovie {
+                    HeroMovieView(movie: movie)
+                        .frame(width: proxy.size.width, height: 410)
+                        .id(movie.id)
+                        .offset(x: dragOffset)
+                        .opacity(1 - min(abs(dragOffset) / 500, 0.35))
+                        .gesture(
+                            DragGesture(minimumDistance: 18)
+                                .onChanged { value in
+                                    dragOffset = value.translation.width * 0.22
                                 }
-                                withAnimation(.spring(response: 0.32, dampingFraction: 0.84)) {
-                                    dragOffset = 0
+                                .onEnded { value in
+                                    let threshold: CGFloat = 45
+                                    if value.translation.width < -threshold {
+                                        showNext()
+                                    } else if value.translation.width > threshold {
+                                        showPrevious()
+                                    }
+                                    withAnimation(.spring(response: 0.32, dampingFraction: 0.84)) {
+                                        dragOffset = 0
+                                    }
                                 }
-                            }
-                    )
-                    .transition(.opacity.combined(with: .scale(scale: 0.985)))
+                        )
+                        .transition(.opacity.combined(with: .scale(scale: 0.985)))
+                        .clipped()
+                }
             }
+            .frame(height: 410)
+            .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
 
             HStack(spacing: 7) {
                 ForEach(movies.indices, id: \.self) { index in
@@ -213,6 +219,7 @@ private struct RotatingHeroCarousel: View {
                         .fill(index == selectedIndex ? CineTheme.accent : Color.white.opacity(0.22))
                         .frame(width: index == selectedIndex ? 24 : 7, height: 7)
                         .animation(.easeInOut(duration: 0.25), value: selectedIndex)
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.28)) {
                                 selectedIndex = index
@@ -220,8 +227,10 @@ private struct RotatingHeroCarousel: View {
                         }
                 }
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, alignment: .center)
         }
+        .frame(maxWidth: .infinity)
+        .clipped()
         .onReceive(timer) { _ in
             guard movies.count > 1, abs(dragOffset) < 1 else { return }
             showNext()
@@ -313,6 +322,7 @@ struct HeroMovieView: View {
             }
             .frame(maxWidth: .infinity)
             .frame(height: 410)
+            .clipped()
             .background(CineTheme.surface)
             .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
             .overlay(
