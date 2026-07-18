@@ -57,23 +57,6 @@ struct MovieDetailView: View {
                 }
                 .ignoresSafeArea(edges: .top)
             }
-            // La freccia è un overlay esterno allo ScrollView: non può scorrere con la pagina.
-            .overlay(alignment: .topLeading) {
-                Button { dismiss() } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 22, weight: .bold))
-                        .foregroundStyle(.white)
-                        .frame(width: 48, height: 48)
-                        .background(Color.black.opacity(0.62), in: Circle())
-                        .overlay(Circle().stroke(Color.white.opacity(0.20), lineWidth: 1))
-                        .shadow(color: .black.opacity(0.45), radius: 10, y: 4)
-                }
-                .buttonStyle(.plain)
-                .contentShape(Circle())
-                .padding(.leading, 16)
-                .padding(.top, 8)
-                .zIndex(999)
-            }
         }
         .toolbar(.hidden, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
@@ -83,7 +66,7 @@ struct MovieDetailView: View {
     private func hero(width: CGFloat, topInset: CGFloat) -> some View {
         let heroHeight: CGFloat = 560 + topInset
 
-        return ZStack(alignment: .bottom) {
+        return ZStack {
             RemoteImage(url: model.details?.backdropURL ?? movie.backdropURL)
                 .frame(width: width, height: heroHeight)
                 .clipped()
@@ -99,6 +82,32 @@ struct MovieDetailView: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
+
+            VStack {
+                HStack {
+                    Button { dismiss() } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 21, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(width: 46, height: 46)
+                            .background(Color.black.opacity(0.62), in: Circle())
+                            .overlay(Circle().stroke(Color.white.opacity(0.20), lineWidth: 1))
+                            .shadow(color: .black.opacity(0.45), radius: 10, y: 4)
+                    }
+                    .buttonStyle(.plain)
+                    .contentShape(Circle())
+
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, topInset + 8)
+
+                Spacer()
+            }
+            .zIndex(2)
+
+            VStack {
+                Spacer()
 
             HStack(alignment: .bottom, spacing: 18) {
                 RemoteImage(url: model.details?.posterURL ?? movie.posterURL)
@@ -140,6 +149,7 @@ struct MovieDetailView: View {
             }
             .padding(.horizontal, 22)
             .padding(.bottom, 24)
+            }
         }
         .frame(width: width, height: heroHeight)
         .clipped()

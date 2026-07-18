@@ -1,3 +1,3 @@
-# CineOra – Build 7
+CineOra Build 16
 
-Correzione scheda film/serie: intestazione compatta, immagine a piena altezza e rimozione dello spazio vuoto superiore.
+Correzione: la freccia Indietro è ora dentro la testata della scheda film. Scorre via insieme alla pagina e non rimane fissa sullo schermo.
