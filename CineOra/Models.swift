@@ -100,16 +100,32 @@ enum ReleaseDateFormatter {
         return output.string(from: date)
     }
 
+    static func isFuture(_ value: String?) -> Bool {
+        guard let date = date(value) else { return false }
+        return Calendar.current.startOfDay(for: date) > Calendar.current.startOfDay(for: Date())
+    }
+
+    static func daysUntil(_ value: String?) -> Int? {
+        guard let date = date(value) else { return nil }
+        let calendar = Calendar.current
+        return calendar.dateComponents([.day], from: calendar.startOfDay(for: Date()), to: calendar.startOfDay(for: date)).day
+    }
+
     static func badge(_ value: String?) -> String {
         guard let date = date(value) else { return "Data da definire" }
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let release = calendar.startOfDay(for: date)
         let days = calendar.dateComponents([.day], from: today, to: release).day ?? 0
+
         if days == 0 { return "Esce oggi" }
         if days == 1 { return "Esce domani" }
         if days > 1 && days <= 7 { return "Esce tra \(days) giorni" }
-        if days > 7 { return "In uscita" }
-        return "Al cinema"
+        if days > 7 { return "In uscita il \(format(value))" }
+
+        let daysSinceRelease = abs(days)
+        if daysSinceRelease <= 60 { return "Ora nelle sale" }
+        if daysSinceRelease <= 90 { return "Ultimi giorni al cinema" }
+        return "Uscito nel \(calendar.component(.year, from: date))" }
     }
 }

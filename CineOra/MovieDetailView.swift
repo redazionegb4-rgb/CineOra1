@@ -22,6 +22,7 @@ struct MovieDetailView: View {
     let movie: Movie
     @StateObject private var model = MovieDetailViewModel()
     @EnvironmentObject private var favorites: FavoritesStore
+    @EnvironmentObject private var reminders: ReminderStore
     @Environment(\.openURL) private var openURL
     @Environment(\.dismiss) private var dismiss
 
@@ -161,17 +162,34 @@ struct MovieDetailView: View {
                 Spacer(minLength: 0)
             }
 
-            Button { favorites.toggle(movie) } label: {
-                Label(
-                    favorites.contains(movie) ? "Nella mia lista" : "Aggiungi alla mia lista",
-                    systemImage: favorites.contains(movie) ? "checkmark.circle.fill" : "plus.circle.fill"
-                )
-                .font(.headline.weight(.bold))
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .foregroundStyle(.black)
-                .background(CineTheme.accent)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            HStack(spacing: 12) {
+                Button { favorites.toggle(movie) } label: {
+                    Label(
+                        favorites.contains(movie) ? "In lista" : "La mia lista",
+                        systemImage: favorites.contains(movie) ? "checkmark.circle.fill" : "plus.circle.fill"
+                    )
+                    .font(.subheadline.weight(.bold))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 15)
+                    .foregroundStyle(.black)
+                    .background(CineTheme.accent)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                }
+
+                if ReleaseDateFormatter.isFuture(movie.releaseDate) {
+                    Button { Task { await reminders.toggle(movie) } } label: {
+                        Label(
+                            reminders.contains(movie) ? "Promemoria attivo" : "Avvisami",
+                            systemImage: reminders.contains(movie) ? "bell.fill" : "bell.badge"
+                        )
+                        .font(.subheadline.weight(.bold))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 15)
+                        .foregroundStyle(.white)
+                        .background(CineTheme.surfaceRaised)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    }
+                }
             }
         }
         .padding(18)
