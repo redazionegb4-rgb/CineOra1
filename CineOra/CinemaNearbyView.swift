@@ -4,7 +4,7 @@ import CoreLocation
 
 @MainActor
 final class CinemaNearbyViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
-    static let maximumRadius: CLLocationDistance = 50_000
+    static let maximumRadius: CLLocationDistance = 100_000
 
     @Published var position: MapCameraPosition = .automatic
     @Published var cinemas: [MKMapItem] = []
@@ -33,7 +33,7 @@ final class CinemaNearbyViewModel: NSObject, ObservableObject, CLLocationManager
         case .authorizedWhenInUse, .authorizedAlways:
             locationManager.requestLocation()
         case .denied, .restricted:
-            errorMessage = "Attiva la posizione nelle Impostazioni per trovare i cinema nel raggio di 50 km. Puoi anche cercare una città manualmente."
+            errorMessage = "Attiva la posizione nelle Impostazioni per trovare i cinema nel raggio di 100 km. Puoi anche cercare una città manualmente."
         @unknown default:
             errorMessage = "Non è stato possibile verificare il permesso della posizione."
         }
@@ -136,12 +136,12 @@ final class CinemaNearbyViewModel: NSObject, ObservableObject, CLLocationManager
             updateMapRegion(centeredOn: location)
 
             if cinemas.isEmpty {
-                errorMessage = "Nessun cinema trovato nel raggio di 50 km."
+                errorMessage = "Nessun cinema trovato nel raggio di 100 km."
             }
         } catch {
             cinemas = []
             updateMapRegion(centeredOn: location)
-            errorMessage = "Non è stato possibile cercare i cinema nel raggio di 50 km."
+            errorMessage = "Non è stato possibile cercare i cinema nel raggio di 100 km."
         }
 
         isLoading = false
@@ -206,7 +206,7 @@ struct CinemaNearbyView: View {
                 .foregroundStyle(CineTheme.accent)
             Text("Cinema vicino a te")
                 .font(.system(size: 30, weight: .black, design: .rounded))
-            Text("Mostriamo esclusivamente cinema entro un raggio massimo di 50 km dalla posizione o dalla città cercata.")
+            Text("Mostriamo esclusivamente cinema entro un raggio massimo di 100 km dalla posizione o dalla città cercata.")
                 .foregroundStyle(CineTheme.secondaryText)
                 .lineSpacing(3)
         }
@@ -271,7 +271,7 @@ struct CinemaNearbyView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Cinema trovati")
                     .font(.title3.weight(.black))
-                Text(model.cinemas.isEmpty ? "Ricerca entro 50 km" : "\(model.cinemas.count) risultati entro 50 km")
+                Text(model.cinemas.isEmpty ? "Ricerca entro 100 km" : "\(model.cinemas.count) risultati entro 100 km")
                     .font(.subheadline)
                     .foregroundStyle(CineTheme.secondaryText)
             }
